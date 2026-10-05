@@ -1220,6 +1220,12 @@ reduce these to 2 dimensions using the naxis kwarg.
 
             xy = np.hstack([x.reshape((x.size, 1)) for x in axes])
 
+            if xy.shape[0] == 0:
+                # If input is empty, return empty arrays, rather than
+                # calling the transformation function with an empty
+                # array, which causes some WCSLIB functions to fail
+                return [axes[i] for i in range(len(axes))]
+
             if ra_dec_order and sky == 'input':
                 xy = self._denormalize_sky(xy)
             output = func(xy, origin)
@@ -1235,6 +1241,11 @@ reduce these to 2 dimensions using the naxis kwarg.
                 raise ValueError(
                     "When providing two arguments, the array must be "
                     "of shape (N, {0})".format(self.naxis))
+            if xy.shape[0] == 0:
+                # If input is empty, return empty array, rather than
+                # calling the transformation function with an empty
+                # array, which causes some WCSLIB functions to fail
+                return xy.copy()
             if ra_dec_order and sky == 'input':
                 xy = self._denormalize_sky(xy)
             result = func(xy, origin)
