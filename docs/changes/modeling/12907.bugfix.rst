@@ -1,0 +1,5 @@
+Fixed the ``separability_matrix`` computing incorrect separability for
+nested ``CompoundModels`` joined with the ``&`` operator, where the
+separability sub-matrix of a nested compound model on the right side of
+the join was previously collapsed into a fully coupled block instead of
+retaining its real values.
