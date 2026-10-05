@@ -135,6 +135,22 @@ def test_separable(compound_model, result):
     assert_allclose(separability_matrix(compound_model), result[1])
 
 
+def test_separable_with_nested_compound_models():
+    """
+    Regression test for #12907: nested CompoundModels joined with ``&``
+    should preserve the separability of the nested model instead of
+    collapsing its block to full coupling.
+    """
+    cm = models.Linear1D(10) & models.Linear1D(5)
+
+    model = models.Pix2Sky_TAN() & cm
+    assert_allclose(separability_matrix(model),
+                     np.array([[True, True, False, False],
+                               [True, True, False, False],
+                               [False, False, True, False],
+                               [False, False, False, True]]))
+
+
 def test_custom_model_separable():
     @custom_model
     def model_a(x):
