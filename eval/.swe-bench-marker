@@ -1,0 +1,4 @@
+swe-custom-bench eval branch — base_commit: d5bd3f68bb6d5ce3a61bdce9883ee750d1afade5
+repo: astropy/astropy
+branch: eval-astropy__astropy-7746-set-b
+set: set_b (first instance)
