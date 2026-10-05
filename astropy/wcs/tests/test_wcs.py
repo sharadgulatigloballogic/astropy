@@ -1093,3 +1093,40 @@ def test_keyedsip():
     assert isinstance( w.sip, wcs.Sip )
     assert w.sip.crpix[0] == 2048
     assert w.sip.crpix[1] == 1026
+
+
+def test_zero_size_input():
+    """
+    Passing empty lists/arrays to WCS transformations should return
+    empty lists/arrays rather than raising an error (regression test
+    for #7746).
+    """
+    hdr = get_pkg_data_filename('data/sip.fits')
+    with fits.open(hdr) as hdulist:
+        with pytest.warns(wcs.FITSFixedWarning):
+            w = wcs.WCS(hdulist[0].header)
+
+    for args in [
+            [[], [], 0],
+            [np.array([]), np.array([]), 0],
+            [np.zeros((0, 2)), 0]]:
+        x = w.wcs_pix2world(*args)
+        y = w.all_pix2world(*args)
+        if isinstance(x, list):
+            for arr in x:
+                assert len(arr) == 0
+        else:
+            assert len(x) == 0
+        if isinstance(y, list):
+            for arr in y:
+                assert len(arr) == 0
+        else:
+            assert len(y) == 0
+
+        # Must not raise an exception for roundtrip either
+        x2 = w.wcs_world2pix(*args)
+        if isinstance(x2, list):
+            for arr in x2:
+                assert len(arr) == 0
+        else:
+            assert len(x2) == 0

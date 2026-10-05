@@ -455,6 +455,11 @@ astropy.visualization
 astropy.wcs
 ^^^^^^^^^^^
 
+- Fixed a bug where passing empty lists/arrays to ``wcs_pix2world``,
+  ``wcs_world2pix``, ``all_pix2world``, ``all_world2pix`` and related
+  transformation methods raised an ``InconsistentAxisTypesError`` instead
+  of returning empty lists/arrays. [#7746]
+
 Other Changes and Additions
 ---------------------------
 
